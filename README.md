@@ -1,4 +1,4 @@
-# Mutual Fund FAQ Assistant — Facts-Only Q&A
+# HDFC Mutual Fund FAQ Assistant — Facts-Only Q&A
 
 A lightweight Retrieval-Augmented Generation (RAG) assistant that answers **factual** questions about five HDFC mutual fund schemes — expense ratio, exit load, minimum SIP, ELSS lock-in, riskometer, benchmark, and how to download statements. Every answer cites **one official source**. It does **not** give investment advice.
 

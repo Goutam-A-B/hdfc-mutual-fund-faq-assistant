@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Mutual Fund FAQ Assistant",
+  title: "HDFC Mutual Fund FAQ Assistant",
   description:
     "Facts-only Q&A for HDFC mutual fund schemes. Every answer cites one official source. No investment advice.",
 };

@@ -1,4 +1,4 @@
-# Mutual Fund FAQ Assistant — Facts-Only Q&A
+# HDFC Mutual Fund FAQ Assistant — Facts-Only Q&A
 
 > **Milestone Brief — Problem Statement**
 

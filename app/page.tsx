@@ -303,7 +303,10 @@ export default function Home() {
               style={{ backgroundColor: "var(--md-brand)" }}
               aria-hidden
             />
-            <span className="text-title-medium text-on-surface">MF FAQ Assistant</span>
+            <span className="text-title-medium text-on-surface">
+              <span className="hidden sm:inline">HDFC Mutual Fund FAQ Assistant</span>
+              <span className="sm:hidden">HDFC MF FAQ</span>
+            </span>
           </div>
           <span className="text-label-small inline-flex items-center gap-1.5 rounded-m3-xl border border-outline-variant bg-surface-low px-3 py-1 text-on-surface-variant">
             <ShieldIcon className="h-3.5 w-3.5 text-primary" />

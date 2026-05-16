@@ -1,4 +1,4 @@
-# Mutual Fund FAQ Assistant — Phase-Wise Architecture
+# HDFC Mutual Fund FAQ Assistant — Phase-Wise Architecture
 
 > Companion to [PROBLEM_STATEMENT.md](PROBLEM_STATEMENT.md). This document is the build plan: decisions, system design, data contracts, and an ordered set of phases with acceptance criteria.
 

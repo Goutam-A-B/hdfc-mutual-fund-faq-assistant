@@ -1,4 +1,4 @@
-# Edge Cases — Mutual Fund FAQ Assistant
+# Edge Cases — HDFC Mutual Fund FAQ Assistant
 
 > Companion to [PROBLEM_STATEMENT.md](../PROBLEM_STATEMENT.md) and [ARCHITECTURE.md](../ARCHITECTURE.md). Every promise the assistant makes has failure modes — this file catalogues them, why they happen, and how the design defends against them.
 
