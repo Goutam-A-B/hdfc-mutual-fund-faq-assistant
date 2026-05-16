@@ -1,9 +1,9 @@
 "use client";
 
 // Phase 4 — single-page UI for POST /api/ask. Material 3 tokens (see
-// globals.css + tailwind.config.ts), with Groww's vibrant green seeded into
-// the M3 palette and used as a decorative accent — not as a standalone
-// design. The page intentionally renders four distinct response types
+// globals.css + tailwind.config.ts), seeded from the HDFC brand red so the
+// scope (HDFC Mutual Fund schemes only) is visually obvious from the top
+// bar down. The page intentionally renders four distinct response types
 // (answer / refusal / out_of_scope / pii_blocked) so the user always sees
 // what category of reply they got (edge 4.1).
 
@@ -18,6 +18,18 @@ const EXAMPLE_QUESTIONS = [
   "What is the expense ratio of HDFC Mid-Cap Opportunities Fund?",
   "How do I download my capital gains statement?",
   "What is the lock-in for HDFC ELSS Tax Saver?",
+];
+
+// The five HDFC schemes the corpus covers — surfaced in the UI so a first-
+// time visitor knows the exact scope before they type (mirrors out-of-scope
+// refusal copy in lib/answer.ts). Kept in sync with corpus/sources.json
+// canonical names and lib/facts.ts SCHEME_ALIASES.canonical.
+const COVERED_SCHEMES: { name: string; category: string }[] = [
+  { name: "HDFC Mid-Cap Opportunities Fund", category: "Mid Cap" },
+  { name: "HDFC Flexi Cap Fund", category: "Flexi Cap" },
+  { name: "HDFC Focused Fund", category: "Focused" },
+  { name: "HDFC ELSS Tax Saver", category: "ELSS" },
+  { name: "HDFC Large Cap Fund", category: "Large Cap" },
 ];
 
 const DISCLAIMER = "Facts-only. No investment advice.";
@@ -331,8 +343,33 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Example questions */}
+      {/* Covered schemes — informational, non-interactive. Mirrors the
+          out-of-scope refusal copy so a user can see the exact 5 schemes
+          before they ask. */}
       <section className="mx-auto max-w-3xl px-4 pb-2 sm:px-6">
+        <p className="text-label-large mb-2 text-on-surface-variant">
+          Covered schemes <span className="text-on-surface-variant/70">(Direct plan)</span>
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {COVERED_SCHEMES.map((s) => (
+            <span
+              key={s.name}
+              className="text-label-small inline-flex items-center gap-2 rounded-m3-xl border border-outline-variant bg-surface-low px-3 py-1.5 text-on-surface-variant"
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: "var(--md-brand)" }}
+                aria-hidden
+              />
+              <span className="text-on-surface">{s.name}</span>
+              <span className="text-on-surface-variant/80">· {s.category}</span>
+            </span>
+          ))}
+        </div>
+      </section>
+
+      {/* Example questions */}
+      <section className="mx-auto max-w-3xl px-4 pb-2 pt-4 sm:px-6">
         <p className="text-label-large mb-2 text-on-surface-variant">Try one of these</p>
         <div className="flex flex-col gap-2 sm:grid sm:grid-cols-1 md:grid-cols-3">
           {EXAMPLE_QUESTIONS.map((q) => (

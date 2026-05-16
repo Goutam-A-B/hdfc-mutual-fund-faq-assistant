@@ -3,44 +3,46 @@
 @tailwind utilities;
 
 /*
- * Material 3 design tokens. Seed = a Groww-derivative vibrant green (#00D09C);
- * the actual `primary` is the AA-contrast tone derived from it, while the seed
- * itself appears only as a decorative accent (`--md-brand`). All component
- * colors are referenced as CSS variables so Tailwind can map them to utility
- * classes (see tailwind.config.ts) and dark mode is one media-query switch.
+ * Material 3 design tokens. Seed = HDFC brand red (#ED1C24); `primary` is the
+ * AA-contrast tone derived from it, while the seed itself appears only as a
+ * decorative accent (`--md-brand`). Error is intentionally pulled toward
+ * orange (#BF360C) so error/PII surfaces stay visually distinct from primary
+ * HDFC red — without that shift the whole UI reads as one tone of red.
+ * All component colors are CSS variables so Tailwind utility classes (see
+ * tailwind.config.ts) and dark mode flip on one media-query switch.
  */
 :root {
-  /* Color — light scheme */
-  --md-primary: #007f5f;
+  /* Color — light scheme (HDFC red palette) */
+  --md-primary: #b21f2a;
   --md-on-primary: #ffffff;
-  --md-primary-container: #bdf2d6;
-  --md-on-primary-container: #002113;
-  --md-secondary: #4c6358;
+  --md-primary-container: #ffdad8;
+  --md-on-primary-container: #410008;
+  --md-secondary: #6b5454;
   --md-on-secondary: #ffffff;
-  --md-secondary-container: #cfe9da;
-  --md-on-secondary-container: #082019;
-  --md-tertiary: #006970;
+  --md-secondary-container: #f4dedb;
+  --md-on-secondary-container: #251715;
+  --md-tertiary: #65557b;
   --md-on-tertiary: #ffffff;
-  --md-error: #ba1a1a;
+  --md-error: #bf360c;
   --md-on-error: #ffffff;
-  --md-error-container: #ffdad6;
-  --md-on-error-container: #410002;
-  --md-background: #fbfdf8;
-  --md-on-background: #181d1b;
-  --md-surface: #fbfdf8;
-  --md-on-surface: #181d1b;
-  --md-surface-variant: #dce5dd;
-  --md-on-surface-variant: #404944;
-  --md-outline: #707974;
-  --md-outline-variant: #bfc9c3;
+  --md-error-container: #ffdbcc;
+  --md-on-error-container: #401400;
+  --md-background: #fffbf9;
+  --md-on-background: #221919;
+  --md-surface: #fffbf9;
+  --md-on-surface: #221919;
+  --md-surface-variant: #f4dedc;
+  --md-on-surface-variant: #524343;
+  --md-outline: #847373;
+  --md-outline-variant: #d6c2c1;
   --md-surface-container-lowest: #ffffff;
-  --md-surface-container-low: #f5f7f2;
-  --md-surface-container: #eff1ec;
-  --md-surface-container-high: #e9ebe7;
-  --md-surface-container-highest: #e3e5e2;
-  /* Groww-derivative brand accent — decorative use only (logo dot, hover tint) */
-  --md-brand: #00d09c;
-  --md-brand-soft: rgba(0, 208, 156, 0.12);
+  --md-surface-container-low: #fdf5f3;
+  --md-surface-container: #fbeeec;
+  --md-surface-container-high: #f5e9e6;
+  --md-surface-container-highest: #efe3e1;
+  /* Vivid HDFC red — decorative use only (logo dot, hero glow tint) */
+  --md-brand: #ed1c24;
+  --md-brand-soft: rgba(237, 28, 36, 0.10);
 
   /* State-layer opacities (M3 spec) */
   --md-state-hover: 0.08;
@@ -50,35 +52,35 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --md-primary: #6bdbaa;
-    --md-on-primary: #00382a;
-    --md-primary-container: #00513d;
-    --md-on-primary-container: #87f8c5;
-    --md-secondary: #b3ccbe;
-    --md-on-secondary: #1f352b;
-    --md-secondary-container: #354b41;
-    --md-on-secondary-container: #cfe9da;
-    --md-tertiary: #80d1da;
-    --md-on-tertiary: #003740;
-    --md-error: #ffb4ab;
-    --md-on-error: #690005;
-    --md-error-container: #93000a;
-    --md-on-error-container: #ffdad6;
-    --md-background: #0f1411;
-    --md-on-background: #dee4df;
-    --md-surface: #0f1411;
-    --md-on-surface: #dee4df;
-    --md-surface-variant: #404944;
-    --md-on-surface-variant: #bfc9c3;
-    --md-outline: #899392;
-    --md-outline-variant: #404944;
-    --md-surface-container-lowest: #090d0b;
-    --md-surface-container-low: #181d1b;
-    --md-surface-container: #1b211e;
-    --md-surface-container-high: #262b29;
-    --md-surface-container-highest: #313633;
-    --md-brand: #00d09c;
-    --md-brand-soft: rgba(0, 208, 156, 0.18);
+    --md-primary: #ffb3b0;
+    --md-on-primary: #5f0017;
+    --md-primary-container: #8b0024;
+    --md-on-primary-container: #ffdad8;
+    --md-secondary: #d7c0bd;
+    --md-on-secondary: #3b2a29;
+    --md-secondary-container: #54403f;
+    --md-on-secondary-container: #f4dedb;
+    --md-tertiary: #d0bce4;
+    --md-on-tertiary: #352749;
+    --md-error: #ffb59a;
+    --md-on-error: #5e1900;
+    --md-error-container: #862800;
+    --md-on-error-container: #ffdbcc;
+    --md-background: #1a1110;
+    --md-on-background: #f1dedc;
+    --md-surface: #1a1110;
+    --md-on-surface: #f1dedc;
+    --md-surface-variant: #524343;
+    --md-on-surface-variant: #d6c2c1;
+    --md-outline: #9e8c8b;
+    --md-outline-variant: #524343;
+    --md-surface-container-lowest: #130a0a;
+    --md-surface-container-low: #221919;
+    --md-surface-container: #261d1d;
+    --md-surface-container-high: #312828;
+    --md-surface-container-highest: #3c3332;
+    --md-brand: #ff5a55;
+    --md-brand-soft: rgba(255, 90, 85, 0.16);
   }
 }
 
@@ -137,7 +139,7 @@ body {
   letter-spacing: 0.03125rem; /* 0.5px */
 }
 
-/* Subtle decorative texture: a single radial highlight in Groww-brand green
+/* Subtle decorative texture: a single radial highlight in HDFC-brand red
  * behind the hero. Kept very low alpha so it reads as warmth, not as a CTA. */
 .hero-glow {
   background: radial-gradient(

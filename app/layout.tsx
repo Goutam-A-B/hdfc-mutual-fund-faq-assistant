@@ -18,10 +18,12 @@ export const metadata: Metadata = {
 };
 
 // Match the M3 background color so the mobile address bar tints to the page.
+// Background tones are warm-white in light / warm-near-black in dark to pair
+// with the HDFC red primary (see app/globals.css).
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfdf8" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1411" },
+    { media: "(prefers-color-scheme: light)", color: "#fffbf9" },
+    { media: "(prefers-color-scheme: dark)", color: "#1a1110" },
   ],
 };
 
