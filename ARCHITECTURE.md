@@ -8,7 +8,7 @@
 
 | Area | Decision | Why |
 |---|---|---|
-| **Data sources** | Official only — `hdfcfund.com` (HDFC AMC) + AMFI + SEBI + CAMS / MF Central | Brief bans aggregators; Groww is one. Groww is **UI inspiration only**, never a citation. |
+| **Data sources** | Official HDFC AMC (`hdfcfund.com`) as primary sources. **Expense ratio** answers also include a Groww link as a secondary reference. | Keeps answers grounded in official pages, while adding a convenient cross-check link for TER/expense ratio. |
 | **LLM** | Original: **Gemini 2.0 Flash**. Build-time pin: **`gemini-2.5-flash-lite`** (Google retired 2.0-flash from the free tier mid-build; lite is the protocol-compatible replacement, same JSON-mode + temperature controls). Overridable via `GEMINI_GEN_MODEL` env var for test harness fallback. | Genuinely free tier; one vendor for generation *and* embeddings; ample for a guardrail-heavy, facts-only app. |
 | **Embeddings** | Original: **`text-embedding-004`**. Build-time pin: **`gemini-embedding-001`** with `outputDimensionality: 768` (same vector shape, same `RETRIEVAL_QUERY`/`RETRIEVAL_DOCUMENT` task types). | Same vendor, free tier, no extra account. |
 | **Retrieval store** | **In-memory static index** — embeddings baked into `index.json` at build time, cosine similarity in the API route | Corpus is ~15–25 pages (~150–300 chunks). Zero infra, zero cost, no cold-start. |
@@ -63,7 +63,7 @@
 1. **PII Guard** — regex scan for PAN / Aadhaar / phone / email / account no. / OTP. On hit: return a safe message, **process nothing, log nothing**.
 2. **Classifier** — cheap rule pre-filter for advisory keywords (`should i`, `better`, `recommend`, `worth it`, `buy`, `sell`), then a Gemini call returns `factual | advisory | out_of_scope`.
 3. **Router**
-   - `advisory` → **Refusal handler**: polite facts-only message + an AMFI/SEBI educational link.
+   - `advisory` → **Refusal handler**: polite facts-only message + an HDFC AMC investor-FAQ link.
    - `out_of_scope` → polite "I can only answer facts about these 5 HDFC schemes."
    - `factual` → continue.
 4. **Answer path (factual)**
@@ -240,7 +240,7 @@
 
 The offline pipeline is the same code whether run locally or in CI. A cron workflow re-runs it and proposes the result as a **Pull Request** — never a direct push to `main`.
 
-- **Triggers:** `schedule` cron + `workflow_dispatch` for manual/test runs. **Cadence deviation:** the original design was monthly (mirroring HDFC's factsheet publication); during Phase 7 this was changed to **weekdays at 09:00 IST (`30 3 * * 1-5` UTC)** at user request — faster scrape-break detection at the cost of more PRs to review. Run-in-place via the fixed `corpus/auto-refresh` branch + concurrency guard keeps the PR queue at one open PR rather than 5/week.
+- **Triggers:** `schedule` cron + `workflow_dispatch` for manual/test runs. **Cadence deviation:** the original design was monthly (mirroring HDFC's factsheet publication); during Phase 7 this was changed to **weekdays at 09:30 IST (`0 4 * * 1-5` UTC)** at user request — faster scrape-break detection at the cost of more PRs to review. Run-in-place via the fixed `corpus/auto-refresh` branch + concurrency guard keeps the PR queue at one open PR rather than 5/week.
 - **Flow:** checkout → install deps → install Chromium → `npm run ingest` → if `corpus/` changed, open a PR with the diff.
 - **Human gate:** numeric facts (`facts.json`) are the highest-risk artifact. A maintainer reviews the PR diff before merging — a bad parse can't silently reach production. On merge to `main`, Vercel auto-redeploys.
 - **Secrets:** `GEMINI_API_KEY` (repo secret) — needed for the embedding step in `3-build-index`.

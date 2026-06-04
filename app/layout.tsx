@@ -1,14 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 
-// Inter is the closest free pairing to Roboto Flex (M3's recommended typeface)
-// and matches Groww's broader feel. Loaded by next/font so it self-hosts and
-// avoids the FOUT.
-const inter = Inter({
+// Stitch redesign uses Geist for a premium, technical fintech feel.
+// Loaded by next/font so it self-hosts and avoids FOUT.
+const geist = Geist({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
+  variable: "--font-geist",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +22,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#fffbf9" },
-    { media: "(prefers-color-scheme: dark)", color: "#1a1110" },
+    { media: "(prefers-color-scheme: dark)", color: "#141317" },
   ],
 };
 
@@ -33,7 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${geist.variable} dark`}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700&display=swap"
+        />
+      </head>
       <body className="min-h-screen bg-background font-sans text-on-background antialiased">
         {children}
       </body>

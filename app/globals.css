@@ -50,44 +50,65 @@
   --md-state-pressed: 0.12;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --md-primary: #ffb3b0;
-    --md-on-primary: #5f0017;
-    --md-primary-container: #8b0024;
-    --md-on-primary-container: #ffdad8;
-    --md-secondary: #d7c0bd;
-    --md-on-secondary: #3b2a29;
-    --md-secondary-container: #54403f;
-    --md-on-secondary-container: #f4dedb;
-    --md-tertiary: #d0bce4;
-    --md-on-tertiary: #352749;
-    --md-error: #ffb59a;
-    --md-on-error: #5e1900;
-    --md-error-container: #862800;
-    --md-on-error-container: #ffdbcc;
-    --md-background: #1a1110;
-    --md-on-background: #f1dedc;
-    --md-surface: #1a1110;
-    --md-on-surface: #f1dedc;
-    --md-surface-variant: #524343;
-    --md-on-surface-variant: #d6c2c1;
-    --md-outline: #9e8c8b;
-    --md-outline-variant: #524343;
-    --md-surface-container-lowest: #130a0a;
-    --md-surface-container-low: #221919;
-    --md-surface-container: #261d1d;
-    --md-surface-container-high: #312828;
-    --md-surface-container-highest: #3c3332;
-    --md-brand: #ff5a55;
-    --md-brand-soft: rgba(255, 90, 85, 0.16);
-  }
+/* Dark theme tokens (Stitch export: "Premium Fintech Material").
+ * We key this off the `html.dark` class so the UI matches the design even
+ * when the OS is in light mode. */
+html.dark {
+  --md-primary: #ffb3b1;
+  --md-on-primary: #680011;
+  --md-primary-container: #e31837;
+  --md-on-primary-container: #fffaf9;
+  --md-secondary: #c8c6c5;
+  --md-on-secondary: #303030;
+  --md-secondary-container: #474746;
+  --md-on-secondary-container: #b7b5b4;
+  --md-tertiary: #b7c7e4;
+  --md-on-tertiary: #213148;
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+  --md-background: #141317;
+  --md-on-background: #e5e1e7;
+  --md-surface: #141317;
+  --md-on-surface: #e5e1e7;
+  --md-surface-variant: #353438;
+  --md-on-surface-variant: #e6bdbb;
+  --md-outline: #ad8886;
+  --md-outline-variant: #5d3f3e;
+  --md-surface-container-lowest: #0e0e11;
+  --md-surface-container-low: #1c1b1f;
+  --md-surface-container: #201f23;
+  --md-surface-container-high: #2b292d;
+  --md-surface-container-highest: #353438;
+  --md-brand: #e31837;
+  --md-brand-soft: rgba(227, 24, 55, 0.16);
 }
 
 html,
 body {
   background: var(--md-background);
   color: var(--md-on-background);
+}
+
+/* Material Symbols helper (loaded in app/layout.tsx). */
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* Custom scrollbar (subtle, M3-ish). */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--md-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--md-surface-container-highest);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-secondary-container);
 }
 
 /* M3 typography scale, mapped to Tailwind-friendly utility class names */

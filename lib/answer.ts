@@ -11,6 +11,7 @@ import { citationForSourceId, lookupFact } from "./facts";
 import { generateJSON } from "./gemini";
 import type { ScoredChunk } from "./retriever";
 import type { AskResponse, Citation, FactType, StoredFact } from "./contracts";
+import { growwCitationForScheme } from "./external-links";
 
 // Below this top-1 cosine score we don't even ask the LLM — the corpus
 // obviously doesn't cover the topic (edge case 3.9).
@@ -18,7 +19,7 @@ const RAG_MIN_TOP_SCORE = 0.25;
 
 // Hard-coded citations for canned messages (these sourceIds exist in
 // sources.json so they round-trip through citationForSourceId).
-const AMFI_INVESTOR_CORNER = "amfi-investor-corner";
+const HDFC_INVESTOR_FAQ = "hdfc-investor-faq-general";
 const FACTSHEETS_HUB = "hdfc-factsheets-hub";
 
 const SCHEME_LIST =
@@ -68,10 +69,15 @@ export function factualResponse(scheme: string, factType: FactType): AskResponse
   if (!fact) return null;
   const citation = citationForSourceId(fact.sourceId, scheme);
   if (!citation) return null; // refuse rather than answer uncited (edge 3.12)
+  const citations =
+    factType === "expenseRatio"
+      ? [citation, growwCitationForScheme(scheme)].filter(Boolean) as Citation[]
+      : [citation];
   return {
     type: "answer",
     answer: clampToThreeSentences(templateFor(scheme, factType, fact)),
     citation,
+    citations,
     lastUpdated: fact.asOf,
     intent: "factual",
   };
@@ -152,6 +158,7 @@ export async function ragResponse(
     type: "answer",
     answer: clampToThreeSentences(out.answer),
     citation,
+    citations: [citation],
     lastUpdated,
     intent: "factual",
   };
@@ -164,14 +171,16 @@ function citation(sourceId: string, fallback: Citation): Citation {
 }
 
 export function refusalResponse(): AskResponse {
+  const c = citation(HDFC_INVESTOR_FAQ, {
+    url: "https://www.hdfcfund.com/help/how-to-invest/frequently-asked-questions",
+    label: "HDFC AMC — Investor FAQs",
+  });
   return {
     type: "refusal",
     answer:
-      "I can only share factual information from official sources — I don't give investment advice, recommendations, or comparisons. For investor education, AMFI's Investor Corner is a good starting point.",
-    citation: citation(AMFI_INVESTOR_CORNER, {
-      url: "https://www.amfiindia.com/investor",
-      label: "AMFI — Investor Corner",
-    }),
+      "I can only share factual information from HDFC AMC and Groww sources — I don't give investment advice, recommendations, or comparisons. For investing/process basics, start with the HDFC AMC investor FAQs.",
+    citation: c,
+    citations: [c],
     lastUpdated: null,
     intent: "advisory",
   };
@@ -188,14 +197,16 @@ export function outOfScopeResponse(): AskResponse {
 }
 
 export function performanceResponse(): AskResponse {
+  const c = citation(FACTSHEETS_HUB, {
+    url: "https://www.hdfcfund.com/investor-services/factsheets",
+    label: "HDFC AMC — Fund Factsheets",
+  });
   return {
     type: "out_of_scope",
     answer:
       "By design, I don't quote or compute scheme performance, returns, CAGR, or NAV. The latest performance and NAV are published on the official HDFC Mutual Fund factsheet page.",
-    citation: citation(FACTSHEETS_HUB, {
-      url: "https://www.hdfcfund.com/investor-services/factsheets",
-      label: "HDFC AMC — Fund Factsheets",
-    }),
+    citation: c,
+    citations: [c],
     lastUpdated: null,
     intent: "out_of_scope",
   };

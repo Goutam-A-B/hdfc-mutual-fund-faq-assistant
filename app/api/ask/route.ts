@@ -4,7 +4,7 @@
 //   2. Performance ask → canned redirect to the official factsheet
 //   3. Classifier     → factual | advisory | out_of_scope
 //   4. Router         → facts.json lookup, RAG fallback, or canned response
-//   5. Answer assembler enforces ≤3 sentences + exactly one citation
+//   5. Answer assembler enforces ≤3 sentences + at least one citation
 //
 // Force Node runtime so static-imported corpus JSON and the regex-heavy guards
 // behave the same in dev and on Vercel.

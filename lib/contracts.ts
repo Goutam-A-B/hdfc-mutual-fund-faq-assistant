@@ -14,7 +14,13 @@ export interface Citation {
 export interface AskResponse {
   type: ResponseType;
   answer: string;
+  /**
+   * Primary citation (kept for backwards compatibility).
+   * New UI should prefer `citations` when present.
+   */
   citation: Citation | null;
+  /** Optional multi-source support (e.g., expense ratio: HDFC AMC + Groww). */
+  citations?: Citation[] | null;
   lastUpdated: string | null;
   intent: Intent | null;
 }

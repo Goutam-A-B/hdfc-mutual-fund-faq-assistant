@@ -1,22 +1,19 @@
 # Phase 7 — Scheduled corpus refresh.
 # Re-runs the same offline ingestion pipeline used locally (npm run ingest)
-# every weekday morning and opens a PR with any updated corpus/ artifacts.
-# A maintainer reviews the facts.json diff before merging — see
-# ARCHITECTURE.md §7 and docs/edge-cases.md §9.
+# daily and commits updated corpus artifacts back to the default branch.
+# The Vercel deployment (connected to this repo) will redeploy on that push.
 
 name: Refresh corpus
 
 on:
   schedule:
-    # 04:00 UTC, Mon–Fri (= 09:30 IST). Cron is always UTC on GitHub
-    # (edge case 7.11). Weekdays-only keeps the weekend PR queue quiet
-    # and the daily gen-model quota burn predictable.
-    - cron: "0 4 * * 1-5"
+    # 05:00 UTC, daily (= 10:30 IST). Cron is always UTC on GitHub
+    # (edge case 7.11).
+    - cron: "0 5 * * *"
   workflow_dispatch: {}
 
 permissions:
   contents: write
-  pull-requests: write
 
 # A single in-flight refresh at a time — prevents the cron and a manual
 # workflow_dispatch from racing on the same branch (edge case 7.8).
@@ -57,41 +54,13 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      # peter-evans/create-pull-request no-ops cleanly when nothing changed,
-      # so a quiet month doesn't fail the job (edge case 7.4).
+      # Commit corpus artifacts back to the default branch.
       #
-      # `add-paths: corpus/` scopes the PR diff to corpus artifacts — keeps
-      # the review focused on facts.json instead of any incidental noise
-      # (edge case 7.9).
-      #
-      # The fixed branch name + concurrency guard above mean a re-run
-      # updates the existing PR in-place rather than spawning a parallel
-      # one. `delete-branch: true` cleans up after merge.
-      - name: Open refresh PR
-        uses: peter-evans/create-pull-request@v7
+      # This keeps the deployed app's data fresh without requiring a manual PR
+      # merge each day. If your repository has branch protection that blocks
+      # GITHUB_TOKEN pushes, switch back to the PR-based workflow.
+      - name: Auto-commit updated corpus (if changed)
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: corpus/auto-refresh
-          delete-branch: true
-          add-paths: corpus/
-          title: "chore: scheduled corpus refresh"
-          commit-message: "chore: refresh corpus artifacts"
-          assignees: ${{ github.repository_owner }}
-          labels: |
-            corpus-refresh
-            automated
-          body: |
-            Automated weekday corpus refresh.
-
-            **Review the `corpus/facts.json` diff carefully before merging.**
-            The numeric facts (expense ratio, exit load, min SIP, lock-in,
-            riskometer, benchmark) are the highest-risk artifact — a bad
-            parse of a refreshed scheme page can quietly ship a wrong
-            number to production. The `add-paths: corpus/` scope keeps
-            this PR focused on those changes; the embedding/index updates
-            are mechanical.
-
-            If a source 404'd, the job will have failed before reaching
-            this step — check the workflow logs.
-
-            Edge cases this PR exists to mitigate: 7.13 (LLM mis-parse),
-            2.8 (cross-scheme contamination), 2.17 (silent layout-break).
+          commit_message: "chore: refresh corpus artifacts (scheduled)"
+          file_pattern: corpus/

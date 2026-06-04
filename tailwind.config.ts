@@ -32,11 +32,19 @@ const config: Config = {
         "on-surface-variant": m3Color("on-surface-variant"),
         outline: m3Color("outline"),
         "outline-variant": m3Color("outline-variant"),
+        // Friendly aliases used across the UI.
         "surface-lowest": m3Color("surface-container-lowest"),
         "surface-low": m3Color("surface-container-low"),
         "surface-container": m3Color("surface-container"),
         "surface-high": m3Color("surface-container-high"),
         "surface-highest": m3Color("surface-container-highest"),
+
+        // Stitch export uses the verbose names — keep aliases so we can paste
+        // components more directly.
+        "surface-container-lowest": m3Color("surface-container-lowest"),
+        "surface-container-low": m3Color("surface-container-low"),
+        "surface-container-high": m3Color("surface-container-high"),
+        "surface-container-highest": m3Color("surface-container-highest"),
         brand: "var(--md-brand)", // decorative; no alpha math needed
       },
       borderRadius: {
@@ -54,7 +62,7 @@ const config: Config = {
         "m3-3": "0 4px 8px 3px rgb(0 0 0 / 0.08), 0 1px 3px 0 rgb(0 0 0 / 0.08)",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-geist)", "system-ui", "sans-serif"],
       },
     },
   },

@@ -7,6 +7,7 @@
 
 import { generateJSON } from "./gemini";
 import type { Intent } from "./contracts";
+import { detectFactType, detectSchemes } from "./facts";
 
 // Phrases that are unambiguously advisory or comparative — no LLM call needed.
 const ADVISORY_PATTERNS: RegExp[] = [
@@ -99,6 +100,13 @@ export async function classify(query: string): Promise<Intent | "performance"> {
   lastDiagnostic = null;
   const rule = ruleClassify(query);
   if (rule) return rule;
+
+  // Extra guardrail: if it's a clean (scheme + known fact-type) query, we can
+  // route it as factual without spending an LLM call. This prevents free-tier
+  // quota exhaustion from turning obvious fact queries into refusals.
+  const schemes = detectSchemes(query);
+  const factType = detectFactType(query);
+  if (schemes.length > 0 && factType) return "factual";
 
   try {
     const out = await generateJSON<ClassifierJson>(

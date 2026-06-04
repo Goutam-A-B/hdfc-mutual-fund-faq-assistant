@@ -1,6 +1,6 @@
 # HDFC Mutual Fund FAQ Assistant — Facts-Only Q&A
 
-A lightweight Retrieval-Augmented Generation (RAG) assistant that answers **factual** questions about five HDFC mutual fund schemes — expense ratio, exit load, minimum SIP, ELSS lock-in, riskometer, benchmark, and how to download statements. Every answer cites **one official source**. It does **not** give investment advice.
+A lightweight Retrieval-Augmented Generation (RAG) assistant that answers **factual** questions about five HDFC mutual fund schemes — expense ratio, exit load, minimum SIP, ELSS lock-in, riskometer, benchmark, and how to download statements. Every answer cites **official HDFC AMC sources** (and **Groww as an extra link for expense ratio only**). It does **not** give investment advice.
 
 > **Facts-only. No investment advice.**
 
@@ -9,7 +9,7 @@ A lightweight Retrieval-Augmented Generation (RAG) assistant that answers **fact
 
 ## Status
 
-**All 9 phases complete (0–8).** Corpus built and committed, `/api/ask` wired end-to-end (PII guard → classifier → facts/RAG → assembler), UI live, [Phase 5 test matrix](docs/test-results.md) runs via `npm test`, app deployed to <https://mutual-fund-faq-assistant-five.vercel.app/>, a weekday GitHub Actions cron ([.github/workflows/refresh-corpus.yml](.github/workflows/refresh-corpus.yml)) re-runs the ingestion pipeline and opens a refresh PR, and the README setup steps were validated against a fresh clone of this repo (Phase 8 gate). See [ARCHITECTURE.md §6](ARCHITECTURE.md) for the full plan.
+**All 9 phases complete (0–8).** Corpus built and committed, `/api/ask` wired end-to-end (PII guard → classifier → facts/RAG → assembler), UI live, [Phase 5 test matrix](docs/test-results.md) runs via `npm test`, app deployed to <https://mutual-fund-faq-assistant-five.vercel.app/>, a daily GitHub Actions cron ([.github/workflows/refresh-corpus.yml](.github/workflows/refresh-corpus.yml)) re-runs the ingestion pipeline and commits updated corpus artifacts, and the README setup steps were validated against a fresh clone of this repo (Phase 8 gate). See [ARCHITECTURE.md §6](ARCHITECTURE.md) for the full plan.
 
 ## Test results (Phase 5)
 
@@ -19,7 +19,7 @@ The `npm test` harness drives the real `/api/ask` route through a 58-case matrix
 |---|---|
 | 0 answers > 3 sentences | **PASS** |
 | 0 wrong-scheme citations | **PASS** |
-| Every `answer` has exactly 1 citation | **PASS** |
+| Every `answer` has ≥ 1 citation (expense ratio shows 2 links) | **PASS** |
 
 Per-bucket pass rate (last run on 2026-05-16):
 
@@ -48,7 +48,7 @@ The full 58-case matrix (`npm test -- --url <prod>` without `--smoke`) requires 
 
 ## Scope
 
-**AMC:** HDFC Mutual Fund — **official sources only** (`hdfcfund.com`, AMFI, SEBI, CAMS / MF Central). No aggregators or third-party blogs.
+**Sources:** Official HDFC Mutual Fund / HDFC AMC pages. **Exception:** expense ratio answers also show a Groww link as a secondary reference.
 
 | Scheme | SEBI category |
 |---|---|
@@ -191,7 +191,7 @@ Full deployment failure modes and mitigations: [docs/edge-cases.md §8](docs/edg
 
 ## Data refresh
 
-[`.github/workflows/refresh-corpus.yml`](.github/workflows/refresh-corpus.yml) — a GitHub Actions cron fires **Mon–Fri at 09:00 IST** (`30 3 * * 1-5` UTC), re-runs `npm run ingest`, and uses `peter-evans/create-pull-request@v7` to open a PR with any updated `corpus/` artifacts. A maintainer reviews the `facts.json` diff before merge; merging triggers a Vercel redeploy.
+[`.github/workflows/refresh-corpus.yml`](.github/workflows/refresh-corpus.yml) — a GitHub Actions cron fires **Mon–Fri at 09:30 IST** (`0 4 * * 1-5` UTC), re-runs `npm run ingest`, and uses `peter-evans/create-pull-request@v7` to open a PR with any updated `corpus/` artifacts. A maintainer reviews the `facts.json` diff before merge; merging triggers a Vercel redeploy.
 
 - **Triggers:** `schedule` cron + `workflow_dispatch` (manual)
 - **Concurrency:** one in-flight refresh at a time on a fixed branch (`corpus/auto-refresh`) — re-runs update the PR in place instead of spawning duplicates (edge case 7.8). With weekday cadence, this also means a Tuesday run updates Monday's still-open PR rather than opening a fresh one

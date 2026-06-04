@@ -415,6 +415,7 @@ function citationBelongsToScheme(url: string, scheme: string): boolean {
 
 function validate(c: BaseCase, res: AskResponse): string[] {
   const failures: string[] = [];
+  const citations = res.citations ?? (res.citation ? [res.citation] : []);
 
   if (res.type !== c.expect.type) {
     failures.push(`type=${res.type} (expected ${c.expect.type})`);
@@ -427,13 +428,13 @@ function validate(c: BaseCase, res: AskResponse): string[] {
   if (res.type === "answer") {
     const count = sentenceCount(res.answer);
     if (count > 3) failures.push(`answer has ${count} sentences (>3)`);
-    if (!res.citation) failures.push("answer is missing a citation");
+    if (citations.length === 0) failures.push("answer is missing a citation");
   }
-  if (c.expect.citation === true && !res.citation) {
+  if (c.expect.citation === true && citations.length === 0) {
     failures.push("expected a citation, got none");
   }
-  if (c.expect.citation === false && res.citation) {
-    failures.push(`unexpected citation: ${res.citation.url}`);
+  if (c.expect.citation === false && citations.length > 0) {
+    failures.push(`unexpected citation(s): ${citations.map((x) => x.url).join(", ")}`);
   }
 
   // Wrong-scheme-citation gate — only meaningful for fact answers where we
