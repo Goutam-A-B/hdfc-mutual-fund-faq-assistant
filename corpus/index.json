@@ -1,7 +1,7 @@
 {
   "model": "gemini-embedding-001",
   "dimension": 768,
-  "builtAt": "2026-06-08T08:42:04.419Z",
+  "builtAt": "2026-06-08T09:43:02.517Z",
   "chunkCount": 171,
   "chunks": [
     {
