@@ -16,6 +16,7 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import {
   FACTS_PATH,
+  META_PATH,
   type Source,
   extractedPath,
   loadEnv,
@@ -24,6 +25,7 @@ import {
   readTextIfExists,
   requireEnv,
   sleep,
+  today,
   warn,
   writeJson,
 } from "./_shared";
@@ -226,6 +228,13 @@ async function main(): Promise<void> {
     warn("4-build-facts", `INCOMPLETE — fix before the Phase 2 gate can pass:`);
     for (const p of problems) warn("4-build-facts", `  - ${p}`);
     process.exitCode = 1;
+  } else {
+    // Stamp the corpus with the date this rebuild completed. The UI surfaces
+    // this as "Last refreshed" — it reflects when the pipeline last ran green,
+    // which advances every successful daily refresh even on days a source page
+    // was reused from snapshot. Per-fact `asOf` stays the honest source date.
+    writeJson(META_PATH, { lastRefreshed: today() });
+    log("4-build-facts", `stamped corpus/meta.json lastRefreshed=${today()}`);
   }
 
   log(

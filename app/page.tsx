@@ -113,7 +113,7 @@ function LastUpdatedRow({ lastUpdated }: { lastUpdated: string | null }) {
       <span className="material-symbols-outlined text-sm" style={{ fontSize: 16 }}>
         history
       </span>
-      <span className="text-label-small">Last updated: {lastUpdated}</span>
+      <span className="text-label-small">Last refreshed: {lastUpdated}</span>
     </div>
   );
 }
@@ -519,7 +519,7 @@ function HomeUnused() {
                   citations.length
                     ? citations.map((c) => `Source: ${c.label} — ${c.url}`).join("\n")
                     : null,
-                  response.lastUpdated ? `Last updated: ${response.lastUpdated}` : null,
+                  response.lastUpdated ? `Last refreshed: ${response.lastUpdated}` : null,
                 ]
                   .filter(Boolean)
                   .join("\n");

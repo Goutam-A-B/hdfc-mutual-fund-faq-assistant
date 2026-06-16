@@ -259,7 +259,7 @@ function CitationBlock({ citations, lastUpdated }: { citations: Citation[]; last
         </a>
       ))}
       {lastUpdated ? (
-        <p className="text-label-small text-on-surface-variant">Last updated from sources: {lastUpdated}</p>
+        <p className="text-label-small text-on-surface-variant">Last refreshed: {lastUpdated}</p>
       ) : null}
     </div>
   );

@@ -13,6 +13,10 @@ export const CACHE_DIR = join(CORPUS_DIR, ".cache");
 export const SOURCES_PATH = join(CORPUS_DIR, "sources.json");
 export const INDEX_PATH = join(CORPUS_DIR, "index.json");
 export const FACTS_PATH = join(CORPUS_DIR, "facts.json");
+// Pipeline run metadata (NOT part of the facts.json contract — kept separate so
+// facts.json stays a clean scheme→facts map per ARCHITECTURE §5). Holds the
+// date the corpus was last rebuilt; the UI surfaces it as "Last refreshed".
+export const META_PATH = join(CORPUS_DIR, "meta.json");
 
 /** One entry in corpus/sources.json — see ARCHITECTURE.md §5. */
 export interface Source {

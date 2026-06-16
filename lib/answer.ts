@@ -7,11 +7,18 @@
 // (edges 3.11, 3.12). Refusals carry an educational link per the brief; the
 // other canned messages may or may not, depending on what makes sense.
 
+import metaData from "@/corpus/meta.json";
 import { citationForSourceId, lookupFact } from "./facts";
 import { generateJSON } from "./gemini";
 import type { ScoredChunk } from "./retriever";
 import type { AskResponse, Citation, FactType, StoredFact } from "./contracts";
 import { growwCitationForScheme } from "./external-links";
+
+// The date the corpus was last rebuilt by the ingestion pipeline. Shown in the
+// UI as "Last refreshed" — a single, honest per-run date rather than each
+// source's individual fetch date (which can lag when a page is blocked and
+// reused from snapshot). Written by scripts/4-build-facts.ts.
+const LAST_REFRESHED: string = (metaData as { lastRefreshed: string }).lastRefreshed;
 
 // Below this top-1 cosine score we don't even ask the LLM — the corpus
 // obviously doesn't cover the topic (edge case 3.9).
@@ -78,7 +85,7 @@ export function factualResponse(scheme: string, factType: FactType): AskResponse
     answer: clampToThreeSentences(templateFor(scheme, factType, fact)),
     citation,
     citations,
-    lastUpdated: fact.asOf,
+    lastUpdated: LAST_REFRESHED,
     intent: "factual",
   };
 }
@@ -150,16 +157,12 @@ export async function ragResponse(
   const citation = citationForSourceId(out.primarySourceId, scheme ?? undefined);
   if (!citation) return noSourceResponse(); // edge 3.12
 
-  // The chunk we cited (by sourceId) carries the fetchedAt we need.
-  const cited = topK.find((c) => c.chunk.sourceId === out.primarySourceId);
-  const lastUpdated = cited?.chunk.fetchedAt ?? topK[0].chunk.fetchedAt;
-
   return {
     type: "answer",
     answer: clampToThreeSentences(out.answer),
     citation,
     citations: [citation],
-    lastUpdated,
+    lastUpdated: LAST_REFRESHED,
     intent: "factual",
   };
 }
