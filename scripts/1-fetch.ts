@@ -3,6 +3,7 @@
 // JS-rendered hdfcfund.com pages hydrate before we snapshot (edge case 2.1);
 // PDFs are downloaded directly. Snapshots are committed for reproducibility.
 // See ARCHITECTURE.md §6 Phase 2.
+import { existsSync } from "node:fs";
 import { chromium, type Browser } from "playwright";
 import {
   RAW_DIR,
@@ -25,9 +26,10 @@ const USER_AGENT =
   "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
 const NAV_TIMEOUT_MS = 45_000;
 const POLITE_DELAY_MS = 1_500; // spacing + single-page concurrency — edge case 2.16
+const MAX_ATTEMPTS = 3; // anti-bot 403s are often transient — retry before giving up
 
-/** Snapshot a JS-rendered HTML page once it has hydrated. */
-async function fetchHtml(browser: Browser, source: Source): Promise<boolean> {
+/** One Playwright navigation + snapshot attempt. Returns true on success. */
+async function fetchHtmlOnce(browser: Browser, source: Source): Promise<boolean> {
   const context = await browser.newContext({
     userAgent: USER_AGENT,
     viewport: { width: 1366, height: 900 },
@@ -67,6 +69,23 @@ async function fetchHtml(browser: Browser, source: Source): Promise<boolean> {
   } finally {
     await context.close();
   }
+}
+
+/**
+ * Snapshot a JS-rendered HTML page, retrying on failure. hdfcfund.com 403s
+ * datacenter IPs intermittently (edge case 2.16); a fresh browser context +
+ * backoff frequently gets through on a later attempt.
+ */
+async function fetchHtml(browser: Browser, source: Source): Promise<boolean> {
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    if (await fetchHtmlOnce(browser, source)) return true;
+    if (attempt < MAX_ATTEMPTS) {
+      const backoff = POLITE_DELAY_MS * 2 ** attempt; // 3s, 6s
+      warn("1-fetch", `${source.id}: retry ${attempt}/${MAX_ATTEMPTS - 1} in ${backoff}ms`);
+      await sleep(backoff);
+    }
+  }
+  return false;
 }
 
 /** Download a PDF directly and sanity-check the %PDF header (edge cases 2.3, 2.5). */
@@ -125,15 +144,33 @@ async function main(): Promise<void> {
     warn("1-fetch", `failed: ${failed.join(", ")}`);
   }
 
-  // Scheme pages are the authoritative source for facts.json — a missing one
-  // means the Phase 2 gate cannot pass, so fail loudly (edge cases 2.5, 2.17).
-  const criticalMissing = sources.filter(
+  // Scheme pages are the authoritative source for facts.json. When a fetch
+  // fails (e.g. hdfcfund.com 403s the runner's datacenter IP), fall back to the
+  // committed snapshot so the daily refresh still rebuilds on last-good data
+  // instead of aborting — the deployed app keeps serving facts rather than
+  // breaking on a transient block. Only fail loudly if a scheme page has no
+  // snapshot at all (e.g. a brand-new source), which the Phase 2 gate cannot
+  // pass (edge cases 2.5, 2.17).
+  const failedSchemePages = sources.filter(
     (s) => s.type === "scheme-page" && failed.includes(s.id),
   );
+  const staleFallback = failedSchemePages.filter((s) => existsSync(snapshotPath(s)));
+  const criticalMissing = failedSchemePages.filter((s) => !existsSync(snapshotPath(s)));
+
+  if (staleFallback.length > 0) {
+    warn(
+      "1-fetch",
+      `scheme pages not refreshed — reusing committed snapshot: ${staleFallback
+        .map((s) => s.id)
+        .join(", ")}`,
+    );
+  }
   if (criticalMissing.length > 0) {
     warn(
       "1-fetch",
-      `CRITICAL — scheme pages missing: ${criticalMissing.map((s) => s.id).join(", ")}`,
+      `CRITICAL — scheme pages missing with no snapshot: ${criticalMissing
+        .map((s) => s.id)
+        .join(", ")}`,
     );
     process.exitCode = 1;
   }
