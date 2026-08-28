@@ -91,7 +91,7 @@
     "title": "HDFC Large Cap Fund — Scheme Information Document",
     "url": "https://files.hdfcfund.com/s3fs-public/SID/2025-05/SID%20-%20HDFC%20Large%20Cap%20Fund%20dated%20May%2030,%202025.pdf",
     "publisher": "HDFC AMC",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/hdfc-largecap-sid.pdf",
     "notes": "Dated SID PDF (30-May-2025). Phase 2 should re-check the KIM/SID hub for a newer version before snapshotting."
   },
@@ -103,7 +103,7 @@
     "title": "HDFC Large Cap Fund — Key Information Memorandum",
     "url": "https://files.hdfcfund.com/s3fs-public/KIM/2025-05/KIM%20-%20HDFC%20Large%20Cap%20Fund%20dated%20May%2030,%202025.pdf",
     "publisher": "HDFC AMC",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/hdfc-largecap-kim.pdf",
     "notes": "Dated KIM PDF (30-May-2025). Phase 2 should re-check the KIM/SID hub for a newer version before snapshotting."
   },
@@ -187,7 +187,7 @@
     "title": "AMFI — Risk-o-Meter",
     "url": "https://www.amfiindia.com/online-center/risk-o-meter",
     "publisher": "AMFI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/amfi-riskometer.html",
     "notes": "Industry reference for what the riskometer means and its risk bands."
   },
@@ -199,7 +199,7 @@
     "title": "AMFI — Introduction to Mutual Funds",
     "url": "https://www.amfiindia.com/investor/knowledge-center-info?zoneName=IntroductionMutualFunds",
     "publisher": "AMFI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/amfi-intro-mutual-funds.html",
     "notes": "Definitions (NAV, scheme types, SIP). Good educational link for refusal responses."
   },
@@ -211,7 +211,7 @@
     "title": "AMFI — Investor Corner",
     "url": "https://www.amfiindia.com/investor",
     "publisher": "AMFI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/amfi-investor-corner.html",
     "notes": "AMFI investor education hub; default educational link for advisory-query refusals."
   },
@@ -223,7 +223,7 @@
     "title": "SEBI Investor — Understanding the Riskometer",
     "url": "https://investor.sebi.gov.in/riskometer.html",
     "publisher": "SEBI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/sebi-riskometer-investor.html",
     "notes": "SEBI investor-education explanation of the riskometer's five risk bands."
   },
@@ -235,7 +235,7 @@
     "title": "SEBI — FAQs for Mutual Fund Investors",
     "url": "https://www.sebi.gov.in/sebi_data/faqfiles/sep-2024/1727242783639.pdf",
     "publisher": "SEBI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/sebi-mf-investor-faqs.pdf",
     "notes": "SEBI's official FAQ PDF for mutual fund investors (Sep 2024)."
   },
@@ -247,7 +247,7 @@
     "title": "SEBI Circular — Disclosure of Risk-o-meter, Benchmark and Portfolio",
     "url": "https://www.sebi.gov.in/legal/circulars/aug-2021/disclosure-of-risk-o-meter-of-scheme-benchmark-and-portfolio-details-to-the-investors_52262.html",
     "publisher": "SEBI",
-    "fetchedAt": "2026-08-27",
+    "fetchedAt": "2026-08-28",
     "localSnapshot": "corpus/raw/sebi-riskometer-circular.html",
     "notes": "Regulatory basis for riskometer and benchmark disclosure to investors."
   }
